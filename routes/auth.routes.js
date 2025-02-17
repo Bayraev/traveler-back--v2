@@ -4,6 +4,6 @@ const validateRequest = require('../middlewares/validateRequest');
 const { signupSchema, signinSchema } = require('../utils/validationSchemas');
 
 router.post('/signup', validateRequest(signupSchema), signup);
-router.get('/signin', validateRequest(signinSchema), signin);
+router.post('/signin', validateRequest(signinSchema), signin);
 
 module.exports = router;
