@@ -1,31 +1,32 @@
-const Quest = require('../models/Quest');
-const createError = require('http-errors');
+const questService = require('../services/quest.service');
+const User = require('../models/User');
+const DTO = require('../DTOs/DTO');
 
-const getRandomQuest = async (req, res, next) => {
-  try {
-    const quest = await Quest.aggregate([
-      { $sample: { size: 1 } },
-      {
-        $lookup: {
-          from: 'locations',
-          localField: 'locationId',
-          foreignField: '_id',
-          as: 'location',
-        },
-      },
-      { $unwind: '$location' },
-    ]);
+class QuestController {
+  async getRandomQuest(req, res) {
+    try {
+      const quest = await questService.getRandomQuest(req.params.userId);
 
-    if (!quest.length) {
-      throw createError(404, 'No quests available');
+      const questDTO = DTO(quest, null);
+
+      res.json(questDTO);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
-
-    res.json(quest[0]);
-  } catch (error) {
-    next(error);
   }
-};
 
-module.exports = {
-  getRandomQuest,
-};
+  async completeQuest(req, res) {
+    try {
+      const images = req.files.map((file) => file.path);
+      const completedQuest = await questService.completeQuest(req.params.userId, images);
+
+      const completedQuestDTO = DTO(completedQuest, null);
+
+      res.json(completedQuestDTO);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  }
+}
+
+module.exports = new QuestController();

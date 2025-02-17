@@ -1,19 +1,22 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const currentQuestSchema = require('./schemas/currentQuest.schema');
+const completedQuestSchema = require('./schemas/completedQuest.schema');
 
 const userSchema = new Schema(
   {
     username: { type: String, unique: true, required: true },
     password: { type: String, required: true },
     avatar: { type: String, default: '/default-avatar.png' },
-    completedQuests: [
+    currentQuest: currentQuestSchema,
+    completedQuests: [completedQuestSchema],
+    friends: [
       {
-        questId: { type: Schema.Types.ObjectId, ref: 'Quest' },
-        completionDate: { type: Date, default: Date.now },
-        photoUrl: String,
+        username: { type: String, required: true },
+        avatar: { type: String },
+        addedAt: { type: Date, default: Date.now },
       },
     ],
-    friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,
