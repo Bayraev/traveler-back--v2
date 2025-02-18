@@ -68,7 +68,21 @@ const removeFriend = async (userId, friendUsername) => {
   return { message: 'Друг удален' };
 };
 
+/**
+ * Gets all friends for specified user
+ * @param {string} userId - User ID to get friends for
+ * @returns {Array} Array of user's friends with their details
+ * @throws {Error} If user not found
+ */
+const getFriends = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('Пользователь не найден');
+
+  return user.friends || [];
+};
+
 module.exports = {
   addFriend,
   removeFriend,
+  getFriends,
 };

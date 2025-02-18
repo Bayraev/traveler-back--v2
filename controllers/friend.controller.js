@@ -24,7 +24,29 @@ const removeFriend = async (req, res) => {
   }
 };
 
+/**
+ * Get all friends for a user
+ * Returns array of friends with their details
+ */
+const getFriends = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const friends = await friendService.getFriends(userId);
+
+    res.json({
+      data: friends,
+      error: null,
+    });
+  } catch (error) {
+    res.json({
+      data: null,
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   addFriend,
   removeFriend,
+  getFriends,
 };
