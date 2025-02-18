@@ -8,4 +8,10 @@ router.get('/:userId/random', questController.getRandomQuest);
 // Complete quest with photo proof
 router.post('/:userId/complete', upload.array('images', 5), questController.completeQuest);
 
+// Get current quest for user
+router.get('/:userId/current', questController.getCurrentQuest);
+
+// Get all completed quests for user
+router.get('/:userId/all', questController.getAllQuests);
+
 module.exports = router;
