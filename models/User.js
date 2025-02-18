@@ -12,6 +12,7 @@ const userSchema = new Schema(
     completedQuests: [completedQuestSchema],
     friends: [
       {
+        userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         username: { type: String, required: true },
         avatar: { type: String },
         addedAt: { type: Date, default: Date.now },
