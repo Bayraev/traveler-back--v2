@@ -4,8 +4,19 @@ const validateRequest = require('../middlewares/validateRequest');
 const { questCompletionSchema } = require('../utils/validationSchemas');
 const User = require('../models/User');
 const friendController = require('../controllers/friend.controller');
+const upload = require('../middlewares/upload');
+const validateImageDimensions = require('../middlewares/validateImageDimensions');
+const userController = require('../controllers/user.controller');
 
 // router.post('/:userId/quests', validateRequest(questCompletionSchema), completeQuest);
+
+// Update profile picture
+router.put(
+  '/:userId/avatar',
+  upload.single('avatar'),
+  validateImageDimensions,
+  userController.updateProfilePicture,
+);
 
 // Add new friend
 router.post('/:userId/add-friend/:friendUsername', friendController.addFriend);

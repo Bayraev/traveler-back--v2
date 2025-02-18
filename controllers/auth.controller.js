@@ -11,9 +11,10 @@ const signup = async (req, res, next) => {
       throw createError(409, 'Имя пользователя занято');
     }
 
+    console.log('debug');
     const user = new User({ username, password });
     await user.save();
-
+    console.log('debug2', user);
     const userObject = user.toObject();
     const dtoUser = DTO(userObject, null);
 

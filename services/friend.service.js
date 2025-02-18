@@ -1,88 +1,91 @@
+const { friendDTO, DTO } = require('../DTOs/DTOs');
 const User = require('../models/User');
 
-/**
- * Adds a friend relationship between two users
- * @param {string} userId - ID of the user adding a friend
- * @param {string} friendUsername - Username of the friend to add
- * @returns {Object} Message confirming friend addition
- * @throws {Error} If user not found or other validation errors
- */
-const addFriend = async (userId, friendUsername) => {
-  const friend = await User.findOne({ username: friendUsername });
-  if (!friend) throw new Error('Пользователь не найден');
+class FriendService {
+  /**
+   * Adds a friend relationship between two users
+   * @param {string} userId - ID of the user adding a friend
+   * @param {string} friendUsername - Username of the friend to add
+   * @returns {Object} Message confirming friend addition
+   * @throws {Error} If user not found or other validation errors
+   */
+  async addFriend(userId, friendUsername) {
+    const friend = await User.findOne({ username: friendUsername });
+    if (!friend) throw new Error('Пользователь не найден');
 
-  const currentUser = await User.findById(userId);
-  if (!currentUser) throw new Error('Текущий пользователь не найден');
+    const currentUser = await User.findById(userId);
+    if (!currentUser) throw new Error('Текущий пользователь не найден');
 
-  // Check if already friends
-  const alreadyFriends = currentUser.friends.some((f) => f.username === friendUsername);
-  if (alreadyFriends) throw new Error('Пользователи уже друзья');
+    // Check if already friends
+    const alreadyFriends = currentUser.friends.some((f) => f.username === friendUsername);
+    if (alreadyFriends) throw new Error('Пользователи уже друзья');
 
-  const friendDTO = friendDTO(friend);
+    const friendDTOted = friendDTO(friend);
 
-  // Add friend to current user
-  await User.findByIdAndUpdate(userId, {
-    $addToSet: {
-      friends: {
-        id: currentUser._id,
+    // Add friend to current user
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: {
+        friends: {
+          username: friend.username,
+          avatar: friend.avatar,
+        },
       },
-    },
-  });
+    });
 
-  // Add current user to friend's friends list
-  await User.findByIdAndUpdate(friend._id, {
-    $addToSet: {
-      friends: {
-        id: friend._id,
+    // Add current user to friend's friends list
+    await User.findByIdAndUpdate(friend._id, {
+      $addToSet: {
+        friends: {
+          username: currentUser.username,
+          avatar: currentUser.avatar,
+        },
       },
-    },
-  });
+    });
 
-  return { data: { ...friendDTO }, error: null };
-};
+    const response = DTO(friendDTOted, null);
 
-/**
- * Removes a friend relationship between two users
- * @param {string} userId - ID of the user removing a friend
- * @param {string} friendUsername - Username of the friend to remove
- * @returns {Object} Message confirming friend removal
- * @throws {Error} If user not found or other validation errors
- */
-const removeFriend = async (userId, friendUsername) => {
-  const friend = await User.findOne({ username: friendUsername });
-  if (!friend) throw new Error('Пользователь не найден');
+    return response;
+  }
 
-  const currentUser = await User.findById(userId);
-  if (!currentUser) throw new Error('Текущий пользователь не найден');
+  /**
+   * Removes a friend relationship between two users
+   * @param {string} userId - ID of the user removing a friend
+   * @param {string} friendUsername - Username of the friend to remove
+   * @returns {Object} Message confirming friend removal
+   * @throws {Error} If user not found or other validation errors
+   */
+  async removeFriend(userId, friendUsername) {
+    const friend = await User.findOne({ username: friendUsername });
+    if (!friend) throw new Error('Пользователь не найден');
 
-  // Remove friend from current user
-  await User.findByIdAndUpdate(userId, {
-    $pull: { friends: { username: friendUsername } },
-  });
+    const currentUser = await User.findById(userId);
+    if (!currentUser) throw new Error('Текущий пользователь не найден');
 
-  // Remove current user from friend's friends list
-  await User.findByIdAndUpdate(friend._id, {
-    $pull: { friends: { username: currentUser.username } },
-  });
+    // Remove friend from current user
+    await User.findByIdAndUpdate(userId, {
+      $pull: { friends: { username: friendUsername } },
+    });
 
-  return { message: 'Друг удален' };
-};
+    // Remove current user from friend's friends list
+    await User.findByIdAndUpdate(friend._id, {
+      $pull: { friends: { username: currentUser.username } },
+    });
 
-/**
- * Gets all friends for specified user
- * @param {string} userId - User ID to get friends for
- * @returns {Array} Array of user's friends with their details
- * @throws {Error} If user not found
- */
-const getFriends = async (userId) => {
-  const user = await User.findById(userId);
-  if (!user) throw new Error('Пользователь не найден');
+    return { message: 'Друг удален' };
+  }
 
-  return user.friends || [];
-};
+  /**
+   * Gets all friends for specified user
+   * @param {string} userId - User ID to get friends for
+   * @returns {Array} Array of user's friends with their details
+   * @throws {Error} If user not found
+   */
+  async getFriends(userId) {
+    const user = await User.findById(userId);
+    if (!user) throw new Error('Пользователь не найден');
 
-module.exports = {
-  addFriend,
-  removeFriend,
-  getFriends,
-};
+    return user.friends || [];
+  }
+}
+
+module.exports = new FriendService();

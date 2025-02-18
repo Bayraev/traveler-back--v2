@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const Quest = require('../models/Quest');
 const createError = require('http-errors');
+const userService = require('../services/user.service');
+const { DTO } = require('../DTOs/DTOs');
 
 const completeQuest = async (req, res, next) => {
   try {
@@ -31,6 +33,22 @@ const completeQuest = async (req, res, next) => {
   }
 };
 
+/**
+ * Updates user's profile picture
+ */
+const updateProfilePicture = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return next(createError(400, 'Изображение обязательно'));
+    }
+    const updatedUser = await userService.updateProfilePicture(req.params.userId, req.file.path);
+    res.json(DTO(updatedUser, null));
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   completeQuest,
+  updateProfilePicture,
 };

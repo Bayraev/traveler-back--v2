@@ -9,11 +9,9 @@ const errorHandler = (error, req, res, next) => {
   }
 
   res.status(status).json({
-    error: {
-      status,
-      message,
-      timestamp: new Date().toISOString(),
-    },
+    data: null, // Ensuring 'data' is always null
+    status,
+    error: message,
   });
 };
 
