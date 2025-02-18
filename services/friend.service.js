@@ -26,6 +26,7 @@ class FriendService {
     await User.findByIdAndUpdate(userId, {
       $addToSet: {
         friends: {
+          id: friend._id,
           username: friend.username,
           avatar: friend.avatar,
         },
@@ -36,6 +37,7 @@ class FriendService {
     await User.findByIdAndUpdate(friend._id, {
       $addToSet: {
         friends: {
+          id: currentUser._id,
           username: currentUser.username,
           avatar: currentUser.avatar,
         },
