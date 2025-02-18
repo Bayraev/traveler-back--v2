@@ -1,6 +1,6 @@
 const createError = require('http-errors');
 const User = require('../models/User');
-const DTO = require('../DTOs/DTO');
+const { DTO } = require('../DTOs/DTOs');
 
 const signup = async (req, res, next) => {
   try {

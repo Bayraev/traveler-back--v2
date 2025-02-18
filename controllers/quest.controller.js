@@ -1,6 +1,6 @@
 const questService = require('../services/quest.service');
 const User = require('../models/User');
-const DTO = require('../DTOs/DTO');
+const { DTO } = require('../DTOs/DTOs');
 
 class QuestController {
   async getRandomQuest(req, res) {
