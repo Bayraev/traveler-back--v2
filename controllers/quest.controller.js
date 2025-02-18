@@ -6,25 +6,20 @@ class QuestController {
   async getRandomQuest(req, res) {
     try {
       const quest = await questService.getRandomQuest(req.params.userId);
-
-      const questDTO = DTO(quest, null);
-
-      res.json(questDTO);
+      res.json(DTO(quest, null));
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json(DTO(null, error.message));
     }
   }
 
   async completeQuest(req, res) {
     try {
-      const images = req.files.map((file) => file.path);
+      console.log(req.files); // Debugging: Check if files are being received correctly
+      const images = req.files?.map((file) => file.path) || []; // req.files is an array
       const completedQuest = await questService.completeQuest(req.params.userId, images);
-
-      const completedQuestDTO = DTO(completedQuest, null);
-
-      res.json(completedQuestDTO);
+      res.json(DTO(completedQuest, null));
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      res.status(400).json(DTO(null, error.message));
     }
   }
 
@@ -34,15 +29,9 @@ class QuestController {
   async getCurrentQuest(req, res) {
     try {
       const quest = await questService.getCurrentQuest(req.params.userId);
-      res.json({
-        data: quest,
-        error: null,
-      });
+      res.json(DTO(quest, null));
     } catch (error) {
-      res.json({
-        data: null,
-        error: error.message,
-      });
+      res.status(400).json(DTO(null, error.message));
     }
   }
 
@@ -52,15 +41,9 @@ class QuestController {
   async getAllQuests(req, res) {
     try {
       const quests = await questService.getAllQuests(req.params.userId);
-      res.json({
-        data: quests,
-        error: null,
-      });
+      res.json(DTO(quests, null));
     } catch (error) {
-      res.json({
-        data: null,
-        error: error.message,
-      });
+      res.status(400).json(DTO(null, error.message));
     }
   }
 }
