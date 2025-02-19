@@ -37,7 +37,7 @@ const questCompletionDTO = (quest) => ({
 const userDTO = (user) => {
   if (!user) return null;
 
-  const userData = {
+  return {
     _id: user._id,
     username: user.username,
     avatar: addApiUrl(user.avatar),
@@ -46,8 +46,6 @@ const userDTO = (user) => {
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
-
-  return userData;
 };
 
 /**

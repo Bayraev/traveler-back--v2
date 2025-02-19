@@ -4,8 +4,7 @@ const sharp = require('sharp');
 const validateImageDimensions = async (req, res, next) => {
   try {
     if (!req.file) {
-      const error = createHttpError(400, 'Изображение обязательно');
-      return next(error);
+      return next(createHttpError(400, 'Изображение обязательно'));
     }
 
     const metadata = await sharp(req.file.path).metadata();
@@ -16,7 +15,7 @@ const validateImageDimensions = async (req, res, next) => {
 
     next();
   } catch (error) {
-    next(createHttpError(400, error.message)); // Ensuring it's passed to errorHandler
+    next(createHttpError(400, error.message));
   }
 };
 

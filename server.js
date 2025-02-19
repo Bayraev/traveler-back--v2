@@ -15,7 +15,7 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-const { MONGO_DB, PORT, CLIENT_URL, CLIENT_URL2 } = process.env;
+const { PORT, CLIENT_URL, CLIENT_URL2 } = process.env;
 
 // Middleware
 app.use(

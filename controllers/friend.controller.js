@@ -5,11 +5,10 @@ const { DTO } = require('../DTOs/DTOs');
 const addFriend = async (req, res) => {
   try {
     const { userId, friendUsername } = req.params;
-
     const result = await friendService.addFriend(userId, friendUsername);
     res.json(result);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json(DTO(null, error.message));
   }
 };
 
@@ -17,11 +16,10 @@ const addFriend = async (req, res) => {
 const removeFriend = async (req, res) => {
   try {
     const { userId, username } = req.params;
-
     const result = await friendService.removeFriend(userId, username);
     res.json(result);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json(DTO(null, error.message));
   }
 };
 
