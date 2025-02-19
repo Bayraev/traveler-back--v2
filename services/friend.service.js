@@ -16,11 +16,8 @@ class FriendService {
     const currentUser = await User.findById(userId);
     if (!currentUser) throw new Error('Текущий пользователь не найден');
 
-    // Check if already friends
-    const alreadyFriends = currentUser.friends.some((f) => f.username === friendUsername);
+    const alreadyFriends = currentUser.friends.some((f) => f.userId.equals(friend._id));
     if (alreadyFriends) throw new Error('Пользователи уже друзья');
-
-    const friendDTOted = friendDTO(friend);
 
     // Add friend to current user
     await User.findByIdAndUpdate(userId, {
@@ -29,6 +26,7 @@ class FriendService {
           userId: friend._id,
           username: friend.username,
           avatar: friend.avatar,
+          addedAt: new Date(),
         },
       },
     });
@@ -40,13 +38,18 @@ class FriendService {
           userId: currentUser._id,
           username: currentUser.username,
           avatar: currentUser.avatar,
+          addedAt: new Date(),
         },
       },
     });
 
-    const response = DTO(friendDTOted, null);
+    // Get updated friend data
+    const updatedFriend = await friendDTO({
+      userId: friend._id,
+      addedAt: new Date(),
+    });
 
-    return response;
+    return DTO(updatedFriend, null);
   }
 
   /**
@@ -77,16 +80,19 @@ class FriendService {
   }
 
   /**
-   * Gets all friends for specified user
+   * Gets all friends for specified user with actual data
    * @param {string} userId - User ID to get friends for
-   * @returns {Array} Array of user's friends with their details
-   * @throws {Error} If user not found
+   * @returns {Promise<Friend[]>} Array of user's friends with their details
    */
   async getFriends(userId) {
     const user = await User.findById(userId);
     if (!user) throw new Error('Пользователь не найден');
 
-    return user.friends;
+    // Map all friends through friendDTO to get actual data
+    const friends = await Promise.all(user.friends.map((friend) => friendDTO(friend)));
+
+    // Filter out any null values (in case some friends were deleted)
+    return friends.filter(Boolean);
   }
 }
 

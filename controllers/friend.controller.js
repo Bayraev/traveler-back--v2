@@ -1,4 +1,5 @@
 const friendService = require('../services/friend.service');
+const { DTO } = require('../DTOs/DTOs');
 
 // Add a new friend for both users
 const addFriend = async (req, res) => {
@@ -30,18 +31,10 @@ const removeFriend = async (req, res) => {
  */
 const getFriends = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const friends = await friendService.getFriends(userId);
-
-    res.json({
-      data: friends,
-      error: null,
-    });
+    const friends = await friendService.getFriends(req.params.userId);
+    res.json(DTO(friends, null));
   } catch (error) {
-    res.json({
-      data: null,
-      error: error.message,
-    });
+    res.status(400).json(DTO(null, error.message));
   }
 };
 

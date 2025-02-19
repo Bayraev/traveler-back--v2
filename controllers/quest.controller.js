@@ -14,7 +14,6 @@ class QuestController {
 
   async completeQuest(req, res) {
     try {
-      console.log(req.files); // Debugging: Check if files are being received correctly
       const images = req.files?.map((file) => file.path) || []; // req.files is an array
       const completedQuest = await questService.completeQuest(req.params.userId, images);
       res.json(DTO(completedQuest, null));
