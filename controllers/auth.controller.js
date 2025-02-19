@@ -1,6 +1,6 @@
 const createError = require('http-errors');
 const User = require('../models/User');
-const { DTO } = require('../DTOs/DTOs');
+const { DTO, userDTO } = require('../DTOs/DTOs');
 
 const signup = async (req, res, next) => {
   try {
@@ -11,8 +11,11 @@ const signup = async (req, res, next) => {
       throw createError(409, 'Имя пользователя занято');
     }
 
-    const user = new User({ username, password });
+    await console.log(req.file.path);
+    const imagePath = req.file.path;
+    const user = new User({ username, password, avatar: '/' + imagePath });
     await user.save();
+
     const userObject = user.toObject();
     const dtoUser = DTO(userObject, null);
 
@@ -31,9 +34,10 @@ const signin = async (req, res, next) => {
       throw createError(401, 'Логин или пароль не верны!');
     }
 
-    const userObject = user.toObject();
+    const userObject = userDTO(user);
     const dtoUser = DTO(userObject, null);
 
+    console.log(dtoUser);
     res.status(200).json(dtoUser);
   } catch (error) {
     next(error);
