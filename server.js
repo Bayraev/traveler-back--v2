@@ -36,10 +36,12 @@ app.use('/api', authRoutes);
 app.use('/api/quests', questRoutes);
 app.use('/api/users', userRoutes);
 
-//* FOR LOGS
-console.log(req);
 // 404 handler
 app.use((req, res, next) => {
+  //* FOR LOGS
+  if (req) {
+    console.log(req);
+  }
   next(createError(404, 'Ошибка 404!'));
 });
 
