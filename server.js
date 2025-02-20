@@ -20,7 +20,7 @@ const { PORT, CLIENT_URL, CLIENT_URL2 } = process.env;
 // Middleware
 app.use(
   cors({
-    origin: ['http://localhost:5173', CLIENT_URL, CLIENT_URL2], // Allow only your frontend URL
+    origin: ['*', CLIENT_URL, CLIENT_URL2], // Allow only your frontend URL
     credentials: true, // Allow cookies/auth headers
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
@@ -39,9 +39,6 @@ app.use('/api/users', userRoutes);
 // 404 handler
 app.use((req, res, next) => {
   //* FOR LOGS
-  if (req) {
-    console.log(req);
-  }
   next(createError(404, 'Ошибка 404!'));
 });
 
