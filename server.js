@@ -27,6 +27,7 @@ app.use(
     optionsSuccessStatus: 200,
   }),
 );
+app.options('*', cors()); // Allow preflight requests globally
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
