@@ -20,7 +20,7 @@ const { PORT, CLIENT_URL, CLIENT_URL2 } = process.env;
 // Middleware
 app.use(
   cors({
-    origin: ['https://traveleru.netlify.app/', CLIENT_URL, CLIENT_URL2], // Explicitly define allowed origins
+    origin: ['https://traveleru.netlify.app/', '*', CLIENT_URL, CLIENT_URL2], // Explicitly define allowed origins
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
