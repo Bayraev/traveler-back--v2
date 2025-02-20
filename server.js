@@ -20,11 +20,10 @@ const { PORT, CLIENT_URL, CLIENT_URL2 } = process.env;
 // Middleware
 app.use(
   cors({
-    origin: ['https://traveleru.netlify.app/', '*', CLIENT_URL, CLIENT_URL2], // Explicitly define allowed origins
-    credentials: true,
+    origin: '*', // Allow all origins (for testing only)
+    // credentials: true, // Still allow cookies/auth headers
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    optionsSuccessStatus: 200,
   }),
 );
 app.options('*', cors()); // Allow preflight requests globally
