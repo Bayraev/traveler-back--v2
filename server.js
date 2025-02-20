@@ -20,11 +20,11 @@ const { PORT, CLIENT_URL, CLIENT_URL2 } = process.env;
 // Middleware
 app.use(
   cors({
-    origin: ['*', CLIENT_URL, CLIENT_URL2], // Allow only your frontend URL
-    credentials: true, // Allow cookies/auth headers
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-    optionSuccessStatus: 200, //? It helped me to allow cors https://my-js.org/docs/cheatsheet/cors/
+    origin: [CLIENT_URL, CLIENT_URL2], // Explicitly define allowed origins
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200,
   }),
 );
 
