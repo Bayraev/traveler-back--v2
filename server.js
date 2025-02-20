@@ -24,6 +24,7 @@ app.use(
     credentials: true, // Allow cookies/auth headers
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    optionSuccessStatus: 200, //? It helped me to allow cors https://my-js.org/docs/cheatsheet/cors/
   }),
 );
 
