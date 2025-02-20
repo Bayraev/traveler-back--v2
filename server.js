@@ -36,6 +36,8 @@ app.use('/api', authRoutes);
 app.use('/api/quests', questRoutes);
 app.use('/api/users', userRoutes);
 
+//* FOR LOGS
+console.log(req);
 // 404 handler
 app.use((req, res, next) => {
   next(createError(404, 'Ошибка 404!'));
