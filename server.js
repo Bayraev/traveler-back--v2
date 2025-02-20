@@ -39,6 +39,12 @@ app.use('/api/users', userRoutes);
 // 404 handler
 app.use((req, res, next) => {
   //* FOR LOGS
+  if (req) {
+    console.log(req.originalUrl);
+    if (req.body) {
+      console.log(req.body);
+    }
+  }
   next(createError(404, 'Ошибка 404!'));
 });
 
