@@ -2,15 +2,30 @@ const { addApiUrl } = require('../utils/imageUrl');
 const User = require('../models/User');
 
 /**
- * Generic API response wrapper
+ * Generic API success response wrapper
  * @template T
  * @param {T} data - Response data
- * @param {string|null} error - Error message if any
+ * @param {number} status - HTTP status code
+ * @param {string} message - Success message
  * @returns {ApiResponse<T>} Formatted API response
  */
-const DTO = (data = null, error = null) => ({
+const ApiResponse = (data, status = 200, message = 'Success') => ({
   data,
+  status,
+  message,
+});
+
+/**
+ * Generic API error response wrapper
+ * @param {string} error - Error details
+ * @param {number} status - HTTP status code
+ * @param {string} message - Error message
+ * @returns {ApiResponseError} Formatted error response
+ */
+const ApiError = (error, status = 400, message = 'Error occurred') => ({
   error,
+  status,
+  message,
 });
 
 /**
@@ -70,7 +85,8 @@ const friendDTO = async (friend) => {
 };
 
 module.exports = {
-  DTO,
+  ApiResponse,
+  ApiError,
   userDTO,
   friendDTO,
   questCompletionDTO,

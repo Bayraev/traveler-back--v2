@@ -1,24 +1,24 @@
 const questService = require('../services/quest.service');
 const User = require('../models/User');
-const { DTO } = require('../DTOs/DTOs');
+const { ApiResponse, ApiError } = require('../DTOs/DTOs');
 
 class QuestController {
   async getRandomQuest(req, res) {
     try {
       const quest = await questService.getRandomQuest(req.params.userId);
-      res.json(DTO(quest, null));
+      res.status(200).json(ApiResponse(quest, 200, 'Случайный квест получен'));
     } catch (error) {
-      res.status(400).json(DTO(null, error.message));
+      res.status(400).json(ApiError(error.message, 400, 'Ошибка при получении квеста'));
     }
   }
 
   async completeQuest(req, res) {
     try {
-      const images = req.files?.map((file) => file.path) || []; // req.files is an array
+      const images = req.files?.map((file) => file.path) || [];
       const completedQuest = await questService.completeQuest(req.params.userId, images);
-      res.json(DTO(completedQuest, null));
+      res.status(200).json(ApiResponse(completedQuest, 200, 'Квест успешно завершен'));
     } catch (error) {
-      res.status(400).json(DTO(null, error.message));
+      res.status(400).json(ApiError(error.message, 400, 'Ошибка при завершении квеста'));
     }
   }
 

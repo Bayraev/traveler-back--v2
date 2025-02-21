@@ -1,14 +1,14 @@
 const friendService = require('../services/friend.service');
-const { DTO } = require('../DTOs/DTOs');
+const { ApiResponse, ApiError } = require('../DTOs/DTOs');
 
 // Add a new friend for both users
 const addFriend = async (req, res) => {
   try {
     const { userId, friendUsername } = req.params;
-    const result = await friendService.addFriend(userId, friendUsername);
-    res.json(result);
+    const friend = await friendService.addFriend(userId, friendUsername);
+    res.status(200).json(ApiResponse(friend, 200, 'Друг успешно добавлен'));
   } catch (error) {
-    res.status(400).json(DTO(null, error.message));
+    res.status(400).json(ApiError(error.message, 400, 'Ошибка при добавлении друга'));
   }
 };
 
@@ -16,10 +16,10 @@ const addFriend = async (req, res) => {
 const removeFriend = async (req, res) => {
   try {
     const { userId, username } = req.params;
-    const result = await friendService.removeFriend(userId, username);
-    res.json(result);
+    await friendService.removeFriend(userId, username);
+    res.status(200).json(ApiResponse(null, 200, 'Друг успешно удален'));
   } catch (error) {
-    res.status(400).json(DTO(null, error.message));
+    res.status(400).json(ApiError(error.message, 400, 'Ошибка при удалении друга'));
   }
 };
 
@@ -30,9 +30,9 @@ const removeFriend = async (req, res) => {
 const getFriends = async (req, res) => {
   try {
     const friends = await friendService.getFriends(req.params.userId);
-    res.json(DTO(friends, null));
+    res.status(200).json(ApiResponse(friends, 200, 'Список друзей получен'));
   } catch (error) {
-    res.status(400).json(DTO(null, error.message));
+    res.status(400).json(ApiError(error.message, 400, 'Ошибка при получении списка друзей'));
   }
 };
 
