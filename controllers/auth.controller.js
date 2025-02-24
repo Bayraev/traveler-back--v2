@@ -13,8 +13,8 @@ const signup = async (req, res, next) => {
         .json(ApiError('Username already exists', 409, 'Имя пользователя занято'));
     }
 
-    const imagePath = req.file.path || '';
-    const user = new User({ username, password, avatar: '/' + imagePath });
+    const imagePath = req.file ? '/' + req.file.path : ''; // if image exists, add it to the path
+    const user = new User({ username, password, avatar: imagePath });
     await user.save();
 
     const formattedUser = userDTO(user);

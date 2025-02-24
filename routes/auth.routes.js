@@ -5,13 +5,7 @@ const { signupSchema, signinSchema } = require('../utils/validationSchemas');
 const upload = require('../middlewares/upload');
 const validateImageDimensions = require('../middlewares/validateImageDimensions');
 
-router.post(
-  '/signup',
-  upload.single('avatar'),
-  validateImageDimensions,
-  validateRequest(signupSchema),
-  signup,
-);
+router.post('/signup', upload.single('avatar'), validateRequest(signupSchema), signup);
 router.post('/signin', validateRequest(signinSchema), signin);
 
 module.exports = router;
