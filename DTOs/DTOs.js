@@ -1,4 +1,3 @@
-const { addApiUrl } = require('../utils/imageUrl');
 const User = require('../models/User');
 
 /**
@@ -38,8 +37,8 @@ const questCompletionDTO = (quest) => ({
   country: quest.country,
   city: quest.city,
   description: quest.description,
-  photoUrl: addApiUrl(quest.photoUrl),
-  images: addApiUrl(quest.images),
+  photoUrl: quest.photoUrl,
+  images: quest.images,
   coupon: quest.coupon,
   completionDate: quest.completionDate,
 });
@@ -55,7 +54,7 @@ const userDTO = (user) => {
   return {
     _id: user._id,
     username: user.username,
-    avatar: addApiUrl(user.avatar),
+    avatar: user.avatar,
     completedQuests: user.completedQuests?.map(questCompletionDTO) || [],
     friends: user.friends?.map((f) => f.userId) || [],
     createdAt: user.createdAt,
@@ -79,7 +78,7 @@ const friendDTO = async (friend) => {
     _id: friend._id,
     userId: friend.userId,
     username: friendUser.username,
-    avatar: addApiUrl(friendUser.avatar),
+    avatar: friendUser.avatar,
     addedAt: friend.addedAt,
   };
 };
