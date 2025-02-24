@@ -1,40 +1,27 @@
 const User = require('../models/User');
-const fs = require('fs').promises;
-const path = require('path');
+const imageService = require('./image.service');
 const createError = require('http-errors');
 
-/**
- * Updates user's profile picture
- * @param {string} userId - User ID
- * @param {string} imagePath - Path to new image
- * @returns {Promise<Object>} Updated user object
- * @throws {Error} If user not found
- */
-const updateProfilePicture = async (userId, imagePath) => {
-  const user = await User.findById(userId);
-  if (!user) throw createError(404, 'Пользователь не найден');
+class UserService {
+  /**
+   * Updates user's profile picture
+   * @param {string} userId - User ID
+   * @param {File} avatarFile - New avatar file
+   * @returns {Promise<Object>} Updated user object
+   */
+  async updateProfilePicture(userId, avatarFile) {
+    const user = await User.findById(userId);
+    if (!user) throw new Error('Пользователь не найден');
 
-  // Delete old avatar if it exists and isn't the default
-  if (user.avatar) {
-    try {
-      await fs.unlink(path.join('uploads', path.basename(user.avatar)));
-    } catch (error) {
-      console.error('Ошибка при удалении старого аватара:', error);
-    }
+    // Upload new avatar to ImgBB
+    const avatarUrl = await imageService.uploadSingleImage(avatarFile);
+
+    // Update user with new avatar URL
+    const updatedUser = await User.findByIdAndUpdate(userId, { avatar: avatarUrl }, { new: true });
+
+    if (!updatedUser) throw new Error('Пользователь не найден');
+    return updatedUser;
   }
+}
 
-  // Update user with new avatar
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { avatar: '/' + imagePath },
-    { new: true },
-  );
-
-  if (!updatedUser) throw createError(404, 'Пользователь не найден');
-
-  return updatedUser;
-};
-
-module.exports = {
-  updateProfilePicture,
-};
+module.exports = new UserService();

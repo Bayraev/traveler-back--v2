@@ -40,14 +40,17 @@ const completeQuest = async (req, res, next) => {
 const updateProfilePicture = async (req, res, next) => {
   try {
     if (!req.file) {
-      return next(createError(400, 'Изображение обязательно'));
+      return res.status(400).json(ApiError('Image is required', 400, 'Изображение обязательно'));
     }
 
-    const updatedUser = await userService.updateProfilePicture(req.params.userId, req.file.path);
+    const updatedUser = await userService.updateProfilePicture(req.params.userId, req.file);
     const formattedUser = userDTO(updatedUser);
 
     res.status(200).json(ApiResponse(formattedUser, 200, 'Аватар успешно обновлен'));
   } catch (error) {
+    if (error.message === 'Пользователь не найден') {
+      return res.status(404).json(ApiError('User not found', 404, 'Пользователь не найден'));
+    }
     next(error);
   }
 };
