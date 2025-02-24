@@ -7,6 +7,11 @@ const currentQuestSchema = new Schema({
   description: { type: String, required: true },
   photoUrl: { type: String, required: true },
   coupon: { type: String },
+  coordinates: {
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+    zoom: { type: Number, required: true },
+  },
 });
 
 module.exports = currentQuestSchema;

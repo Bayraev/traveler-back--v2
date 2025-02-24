@@ -28,9 +28,9 @@ class QuestController {
   async getCurrentQuest(req, res) {
     try {
       const quest = await questService.getCurrentQuest(req.params.userId);
-      res.json(DTO(quest, null));
+      res.status(200).json(ApiResponse(quest, 200, 'Текущий квест получен'));
     } catch (error) {
-      res.status(400).json(DTO(null, error.message));
+      res.status(400).json(ApiError(error.message, 400, 'Ошибка при получении текущего квеста'));
     }
   }
 
@@ -40,9 +40,9 @@ class QuestController {
   async getAllQuests(req, res) {
     try {
       const quests = await questService.getAllQuests(req.params.userId);
-      res.json(DTO(quests, null));
+      res.status(200).json(ApiResponse(quests, 200, 'Список квестов получен'));
     } catch (error) {
-      res.status(400).json(DTO(null, error.message));
+      res.status(400).json(ApiError(error.message, 400, 'Ошибка при получении всех квестов'));
     }
   }
 }

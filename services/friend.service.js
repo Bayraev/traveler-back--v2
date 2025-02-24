@@ -49,7 +49,7 @@ class FriendService {
       addedAt: new Date(),
     });
 
-    return DTO(updatedFriend, null);
+    return updatedFriend;
   }
 
   /**

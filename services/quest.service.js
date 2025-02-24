@@ -9,6 +9,18 @@ class QuestService {
       { $sample: { size: 1 } },
       { $unwind: '$cities.quests' },
       { $sample: { size: 1 } },
+      {
+        $project: {
+          country: 1,
+          'cities.city': 1,
+          'cities.quests': 1,
+          'cities.coordinates': {
+            latitude: '$cities.latitude',
+            longitude: '$cities.longitude',
+            zoom: '$cities.zoom',
+          },
+        },
+      },
     ]);
 
     if (!world.length) throw new Error('Квесты не найдены');
@@ -16,10 +28,12 @@ class QuestService {
     const quest = {
       country: world[0].country,
       city: world[0].cities.city,
+      coordinates: world[0].cities.coordinates,
       ...world[0].cities.quests,
     };
 
-    await User.findByIdAndUpdate(userId, { currentQuest: quest });
+    const savedUser = await User.findByIdAndUpdate(userId, { currentQuest: quest });
+    console.log(savedUser);
     return quest;
   }
 

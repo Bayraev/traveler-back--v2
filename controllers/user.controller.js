@@ -3,6 +3,7 @@ const Quest = require('../models/Quest');
 const createError = require('http-errors');
 const userService = require('../services/user.service');
 const { DTO, userDTO } = require('../DTOs/DTOs');
+const { ApiResponse, ApiError } = require('../DTOs/DTOs');
 
 const completeQuest = async (req, res, next) => {
   try {
@@ -44,9 +45,8 @@ const updateProfilePicture = async (req, res, next) => {
 
     const updatedUser = await userService.updateProfilePicture(req.params.userId, req.file.path);
     const formattedUser = userDTO(updatedUser);
-    console.log('debug1 updateProfilePicture', formattedUser);
 
-    res.json(DTO(formattedUser, null));
+    res.status(200).json(ApiResponse(formattedUser, 200, 'Аватар успешно обновлен'));
   } catch (error) {
     next(error);
   }
