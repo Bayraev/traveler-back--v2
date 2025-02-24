@@ -13,7 +13,7 @@ const signup = async (req, res, next) => {
         .json(ApiError('Username already exists', 409, 'Имя пользователя занято'));
     }
 
-    const imagePath = req.file.path;
+    const imagePath = req.file.path || '';
     const user = new User({ username, password, avatar: '/' + imagePath });
     await user.save();
 
