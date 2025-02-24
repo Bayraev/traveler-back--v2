@@ -6,7 +6,7 @@ const upload = require('../middlewares/upload');
 router.get('/:userId/random', questController.getRandomQuest);
 
 // Complete quest with photo proof
-router.post('/:userId/complete', upload.array('images', 5), questController.completeQuest);
+router.post('/:userId/complete', upload.array('images', 10), questController.completeQuest);
 
 // Get current quest for user
 router.get('/:userId/current', questController.getCurrentQuest);

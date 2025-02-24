@@ -1,6 +1,9 @@
 const questService = require('../services/quest.service');
 const User = require('../models/User');
 const { ApiResponse, ApiError } = require('../DTOs/DTOs');
+const { default: axios } = require('axios');
+const FormData = require('form-data');
+const imageService = require('../services/image.service');
 
 class QuestController {
   async getRandomQuest(req, res) {
@@ -12,10 +15,14 @@ class QuestController {
     }
   }
 
-  async completeQuest(req, res) {
+  async completeQuest(req, res, next) {
     try {
-      const images = req.files?.map((file) => file.path) || [];
-      const completedQuest = await questService.completeQuest(req.params.userId, images);
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'No images uploaded' });
+      }
+
+      const completedQuest = await questService.completeQuest(req.params.userId, req.files);
+
       res.status(200).json(ApiResponse(completedQuest, 200, 'Квест успешно завершен'));
     } catch (error) {
       res.status(400).json(ApiError(error.message, 400, 'Ошибка при завершении квеста'));

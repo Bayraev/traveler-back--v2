@@ -1,5 +1,6 @@
 const World = require('../models/World');
 const User = require('../models/User');
+const imageService = require('./image.service');
 
 class QuestService {
   async getRandomQuest(userId) {
@@ -37,13 +38,17 @@ class QuestService {
     return quest;
   }
 
-  async completeQuest(userId, images) {
+  async completeQuest(userId, imagePaths) {
     const user = await User.findById(userId);
     if (!user.currentQuest) throw new Error('Нет активного квеста');
 
+    // Upload images to ImgBB
+    const imageUrls = await imageService.uploadMultipleImages(imagePaths);
+    console.log('imageUrls in quest.service.js', imageUrls);
     const completedQuest = {
       ...user.currentQuest.toObject(),
-      images,
+      images: imageUrls,
+      completionDate: new Date(),
     };
 
     await User.findByIdAndUpdate(userId, {
