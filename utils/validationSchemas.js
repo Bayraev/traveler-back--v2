@@ -3,6 +3,7 @@ const Joi = require('joi');
 const signupSchema = Joi.object({
   username: Joi.string().min(5).max(30).required(),
   password: Joi.string().min(6).required(),
+  avatar: Joi.string().optional(),
 });
 
 const signinSchema = Joi.object({
