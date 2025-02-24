@@ -30,7 +30,7 @@ class QuestController {
       const quest = await questService.getCurrentQuest(req.params.userId);
       res.status(200).json(ApiResponse(quest, 200, 'Текущий квест получен'));
     } catch (error) {
-      res.status(400).json(ApiError(error.message, 400, 'Ошибка при получении текущего квеста'));
+      res.status(400).json(ApiError(error.message, 400, 'Нет активного квеста!'));
     }
   }
 

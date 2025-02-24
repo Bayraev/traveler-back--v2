@@ -61,7 +61,9 @@ class QuestService {
    */
   async getCurrentQuest(userId) {
     const user = await User.findById(userId);
+
     if (!user) throw new Error('Пользователь не найден');
+    if (!user.currentQuest) throw new Error('Нет активного квеста');
 
     return user.currentQuest || null;
   }
