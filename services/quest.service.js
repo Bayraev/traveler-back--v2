@@ -38,7 +38,7 @@ class QuestService {
     return quest;
   }
 
-  async completeQuest(userId, imagePaths) {
+  async completeQuest(userId, imagePaths, description) {
     const user = await User.findById(userId);
     if (!user.currentQuest) throw new Error('Нет активного квеста');
 
@@ -49,6 +49,7 @@ class QuestService {
       ...user.currentQuest.toObject(),
       images: imageUrls,
       completionDate: new Date(),
+      comment: description,
     };
 
     await User.findByIdAndUpdate(userId, {

@@ -9,6 +9,7 @@ const completedQuestSchema = new Schema({
   coupon: { type: String },
   completionDate: { type: Date, default: Date.now },
   images: [{ type: String }],
+  comment: { type: String, required: true },
 });
 
 module.exports = completedQuestSchema;

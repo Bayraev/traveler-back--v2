@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const migrateCurrentQuests = require('../migrations/addCoordinatesToCurrentQuest');
+const migrateCompletedQuests = require('../migrations/addCommentToCompletedQuests');
 
 const runMigrations = async () => {
   try {
@@ -8,6 +9,7 @@ const runMigrations = async () => {
     console.log('Connected to MongoDB');
 
     await migrateCurrentQuests();
+    await migrateCompletedQuests();
 
     console.log('All migrations completed');
   } catch (error) {

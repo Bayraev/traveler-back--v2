@@ -21,7 +21,11 @@ class QuestController {
         return res.status(400).json({ message: 'No images uploaded' });
       }
 
-      const completedQuest = await questService.completeQuest(req.params.userId, req.files);
+      const completedQuest = await questService.completeQuest(
+        req.params.userId,
+        req.files,
+        req.body.description, // comment or description of user to that quest
+      );
 
       res.status(200).json(ApiResponse(completedQuest, 200, 'Квест успешно завершен'));
     } catch (error) {
